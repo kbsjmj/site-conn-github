@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>실시간 뉴스</title>
+<style>
+  :root { color-scheme: light dark; --bg:#ffffff; --fg:#1d1d1f; --mut:#6e6e73; --line:#e5e5ea;
+          --us:#2a78d6; --kr:#c0392b; --etc:#7a7a80; --ok:#1e8e3e; --bad:#d93025; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1c1c1e; --fg:#f2f2f7; --mut:#a1a1a6; --line:#2c2c2e;
+            --us:#3987e5; --kr:#e66767; --etc:#8e8e93; --ok:#34c759; --bad:#ff453a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  header { position: sticky; top: 0; background: var(--bg); border-bottom: 1px solid var(--line);
+           padding: 10px 12px; z-index: 1; }
+  .top { display:flex; align-items:center; gap:8px; font-weight:600; }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--ok); }
+  .dot.off { background: var(--bad); }
+  .sub { color:var(--mut); font-size:12px; margin-top:4px; }
+  .count { color:var(--mut); font-size:12px; margin-left:auto; font-weight:400; }
+  .pills { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .pill { font-size:11px; border:1px solid var(--line); border-radius:10px; padding:1px 7px; color:var(--mut); }
+  .pill.bad { color:var(--bad); border-color:var(--bad); }
+  ul { list-style:none; margin:0; padding:0; }
+  .item { padding:10px 12px; border-bottom:1px solid var(--line); }
+  .item.new { animation: flash 2.5s ease-out; }
+  .meta { display:flex; gap:6px; align-items:center; font-size:11px; color:var(--mut); flex-wrap:wrap; }
+  .badge { font-weight:600; border-radius:4px; padding:0 5px; color:#fff; }
+  .badge.us { background:var(--us); }
+  .badge.kr { background:var(--kr); }
+  .badge.etc { background:var(--etc); }
+  .title { display:block; color:var(--fg); text-decoration:none; font-weight:600; margin-top:4px; }
+  a.title:hover { text-decoration: underline; }
+  .sum { margin:4px 0 0; color:var(--mut); font-size:12px; }
+  .empty { padding:24px 12px; color:var(--mut); }
+  @keyframes flash { from { background: rgba(42,120,214,0.18); } to { background: transparent; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><span id="dot" class="dot"></span><span>실시간 뉴스</span><span id="count" class="count"></span></div>
+  <div id="sub" class="sub">연결 중…</div>
+  <div id="pills" class="pills"></div>
+</header>
+<ul id="list"></ul>
+<div id="empty" class="empty" hidden>아직 기사가 없습니다. 활성 뉴스 소스의 첫 조회를 기다리는 중입니다.</div>
+<script>
+(function () {
+  var POLL_MS = 10000, MAX_ITEMS = 300;
+  var lastSeq = null;
+  var list = document.getElementById('list');
+  var empty = document.getElementById('empty');
+  var dot = document.getElementById('dot');
+  var sub = document.getElementById('sub');
+  var pills = document.getElementById('pills');
+  var countEl = document.getElementById('count');
+
+  function safeUrl(u) {
+    try {
+      var x = new URL(u);
+      return (x.protocol === 'http:' || x.protocol === 'https:') ? x.href : null;
+    } catch (e) { return null; }
+  }
+  function fmt(s) {
+    var d = new Date(s);
+    return isNaN(d) ? (s || '') : d.toLocaleString('ko-KR', {month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'});
+  }
+  function node(tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (text != null) el.textContent = text;
+    return el;
+  }
+  function regionClass(r) { return r === '미국' ? 'us' : (r === '국내' ? 'kr' : 'etc'); }
+
+  function render(it, isNew) {
+    var li = node('li', 'item' + (isNew ? ' new' : ''));
+    var meta = node('div', 'meta');
+    meta.appendChild(node('span', 'badge ' + regionClass(it.region), it.region || '기타'));
+    meta.appendChild(node('span', '', fmt(it.published_at)));
+    meta.appendChild(node('span', '', it.source || it.feed));
+    if (it.query) meta.appendChild(node('span', '', '· ' + it.query));
+    li.appendChild(meta);
+    var href = safeUrl(it.url);
+    var a = href ? node('a', 'title', it.title) : node('span', 'title', it.title);
+    if (href) { a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+    li.appendChild(a);
+    if (it.summary) li.appendChild(node('p', 'sum', it.summary));
+    return li;
+  }
+
+  function showStatus(statuses, now) {
+    pills.textContent = '';
+    (statuses || []).forEach(function (st) {
+      var failed = !!st.last_error;
+      var p = node('span', 'pill' + (failed ? ' bad' : ''), st.source + (failed ? ' 실패' : ' 정상'));
+      if (failed) p.title = st.last_error;
+      pills.appendChild(p);
+    });
+    sub.textContent = '마지막 확인 ' + (now ? new Date(now).toLocaleTimeString('ko-KR') : '-') + ' · 10초마다 갱신';
+  }
+
+  function apply(data) {
+    var isFirst = lastSeq === null;
+    var items = (data.items || []).slice().sort(function (a, b) { return a.seq - b.seq; });
+    items.forEach(function (it) { list.insertBefore(render(it, !isFirst), list.firstChild); });
+    while (list.children.length > MAX_ITEMS) list.removeChild(list.lastChild);
+    countEl.textContent = list.children.length ? '표시 ' + list.children.length + '건' : '';
+    empty.hidden = list.children.length > 0;
+    if (lastSeq === null || data.last_seq > lastSeq) lastSeq = data.last_seq;
+  }
+
+  function load() {
+    var url = lastSeq === null ? '/api/news' : '/api/news?after=' + lastSeq;
+    fetch(url, {cache: 'no-store'})
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (data) {
+        dot.className = 'dot';
+        showStatus(data.status, data.now);
+        apply(data);
+      })
+      .catch(function () {
+        dot.className = 'dot off';
+        sub.textContent = '서버 연결 실패. 다시 시도합니다 (' + new Date().toLocaleTimeString('ko-KR') + ')';
+      });
+  }
+
+  load();
+  setInterval(load, POLL_MS);
+})();
+</script>
+</body>
+</html>

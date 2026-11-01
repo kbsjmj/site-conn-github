@@ -1,0 +1,11 @@
+{
+  "status": "000",
+  "message": "정상",
+  "page_no": 1, "total_page": 1, "total_count": 2,
+  "list": [
+    {"corp_code": "00000001", "corp_name": "테스트기업가", "stock_code": "000001",
+     "report_nm": "합성 공시 A", "rcept_no": "20261030000001", "flr_nm": "테스트", "rcept_dt": "20261030", "rm": ""},
+    {"corp_code": "00000002", "corp_name": "테스트기업나", "stock_code": "000002",
+     "report_nm": "합성 공시 B <테스트>", "rcept_no": "20261030000002", "flr_nm": "테스트", "rcept_dt": "20261029", "rm": ""}
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "status": "success",
+  "totalResults": 2,
+  "results": [
+    {
+      "article_id": "syn-001",
+      "title": "[합성] US stocks close higher",
+      "link": "https://example.com/n/1",
+      "description": "synthetic",
+      "pubDate": "2026-10-31 06:00:00",
+      "source_id": "synthetic",
+      "country": [
+        "united states of america"
+      ]
+    },
+    {
+      "article_id": "syn-002",
+      "title": "[합성] 코스피 장 마감",
+      "link": "https://example.com/n/2",
+      "description": "synthetic",
+      "pubDate": "2026-10-31 06:10:00",
+      "source_id": "synthetic",
+      "country": [
+        "south korea"
+      ]
+    }
+  ]
+}

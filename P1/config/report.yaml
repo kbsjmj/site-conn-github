@@ -1,0 +1,6 @@
+# 보고서 설정
+report:
+  default_tier: 1          # 1: 개인 전용 | 2: 가공 결과만 외부 공유 | 3: 원문 포함 외부 배포 (약관 확인 후)
+  template: daily_market
+  out_dir: out
+  share_channels_allowed: []   # 비어 있으면 모든 공유 차단 (사용자 확인 전 기본값)

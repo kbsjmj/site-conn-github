@@ -1,0 +1,130 @@
+# 소스 등록부. 추가·일시중지·퇴역은 이 파일에서만 한다.
+# status: active | paused | retired
+# keys: 환경변수 이름만 쓴다 (값은 쓰지 않는다). 하나라도 없으면 "키 없음".
+# license: 재배포 조건 메모 (보고서 재배포 등급 판단에 사용)
+sources:
+  - id: fred
+    adapter: fred
+    kind: index
+    mode: poll
+    interval_min: 1440
+    daily_limit: null          # 공식 한도 확인 후 기입
+    keys: [FRED_API_KEY]
+    realtime: daily
+    status: active
+    license: "FRED 약관 확인 필요 (생성 자료 재배포 조건)"
+    series: [SP500, NASDAQCOM, DJIA]
+    limit: 10
+  - id: dart
+    adapter: dart
+    kind: disclosure
+    mode: poll
+    interval_min: 10
+    daily_limit: null
+    keys: [DART_API_KEY]
+    realtime: near
+    status: active
+    license: "DART 이용약관 확인 필요 (출처 표기 조건)"
+    lookback_days: 3
+  - id: newsdata
+    adapter: newsdata
+    kind: news
+    mode: poll
+    interval_min: 10
+    daily_limit: null
+    keys: [NEWSDATA_API_KEY]
+    realtime: near
+    status: paused             # 어댑터 미구현
+    license: "기사 원문 재배포 조건 확인 필요"
+    poll_sec: 1800             # 무료 플랜 일 크레딧이 작아 10초 주기 금지
+    keep_raw: false
+    country: us,kr
+    category: business
+  - id: naver_news
+    adapter: naver_news
+    kind: news
+    mode: poll
+    interval_min: 10
+    daily_limit: null
+    keys: [NAVER_API_KEY_ID, NAVER_API_KEY]
+    realtime: near
+    status: paused             # 어댑터 미구현
+    license: "네이버 검색 API 약관 확인 필요"
+    poll_sec: 10               # 키워드를 poll마다 순환 (하루 약 8,640회)
+    keep_raw: false
+    display: 20
+    queries: [증시, 코스피, 금리, 환율, 경제]
+  - id: public_quote
+    adapter: public_quote
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: [DATA_GO_KR_KEY]
+    realtime: daily
+    status: paused             # 어댑터 미구현
+    license: "공공누리 4유형: 상업적 이용·변경·재배포 금지"
+  - id: ecos
+    adapter: ecos
+    kind: macro
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: [ECOS_API_KEY]
+    realtime: daily
+    status: paused             # 키 미발급, 어댑터 미구현
+    license: "한국은행 ECOS 이용 조건 확인 필요"
+  - id: finnhub
+    adapter: finnhub
+    kind: quote
+    mode: poll
+    interval_min: 5
+    daily_limit: null
+    keys: [FINNHUB_API_KEY]
+    realtime: near
+    status: paused             # 어댑터 미구현
+    license: "Finnhub 약관 확인 필요"
+  - id: finnhub_news
+    adapter: finnhub_news
+    kind: news
+    mode: poll
+    interval_min: 1
+    daily_limit: null
+    keys: [FINNHUB_API_KEY]
+    realtime: near
+    status: paused             # 첫 run 확인 후 active. 무료 플랜 분당 60회
+    license: "Finnhub 약관 확인 필요 (뉴스 원문 재배포 조건)"
+    poll_sec: 10
+    keep_raw: false
+    category: general
+  - id: tiingo
+    adapter: tiingo
+    kind: quote
+    mode: poll
+    interval_min: 60
+    daily_limit: null
+    keys: [TIINGO_API_KEY]
+    realtime: daily
+    status: paused             # 어댑터 미구현
+    license: "Tiingo 약관 확인 필요"
+  - id: kiwoom
+    adapter: kiwoom
+    kind: quote
+    mode: ws
+    interval_min: 1
+    daily_limit: null
+    keys: [KIWOOM_APP_KEY, KIWOOM_APP_SECRET]
+    realtime: realtime
+    status: paused             # 키 쌍 인증 대기, 어댑터 미구현
+    license: "키움 약관 확인 필요 (계좌 기반)"
+  # 웹훅 수신 전용. 시세 수집 소스가 아니다. 공개 주소와 서버가 생기기 전까지 paused.
+  - id: tradingview
+    adapter: tradingview
+    kind: alert
+    mode: push
+    interval_min: null
+    daily_limit: null
+    keys: [TRADINGVIEW_WEBHOOK_SECRET]
+    realtime: realtime
+    status: paused             # 어댑터·수신 서버 미구현, 유료 플랜 확인 필요
+    license: "TradingView 약관 확인 필요 (알림 수신용, 시세 재배포 아님)"

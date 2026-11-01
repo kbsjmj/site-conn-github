@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>일일 시황 요약 {{AS_OF}}</title>
+<style>
+:root {
+  color-scheme: light;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --pos: #2a78d6;
+  --neg: #e34948;
+  --rule: #e4e3df;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --pos: #3987e5;
+    --neg: #e66767;
+    --rule: #383835;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-1: #1a1a19;
+  --text-primary: #f0efec;
+  --text-secondary: #c3c2b7;
+  --pos: #3987e5;
+  --neg: #e66767;
+  --rule: #383835;
+}
+body { margin: 0; background: var(--surface-1); color: var(--text-primary);
+  font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; line-height: 1.55; }
+main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 16px; margin: 28px 0 8px; }
+.meta { color: var(--text-secondary); font-size: 13px; }
+.note { color: var(--text-secondary); font-size: 12px; }
+svg { display: block; }
+svg .zero { stroke: var(--text-secondary); stroke-width: 1; }
+svg .bar-pos { fill: var(--pos); }
+svg .bar-neg { fill: var(--neg); }
+svg .label { fill: var(--text-primary); font-size: 14px; font-weight: 600; }
+svg .sub { fill: var(--text-secondary); font-weight: 400; font-size: 13px; }
+svg .value { fill: var(--text-primary); font-size: 14px; font-variant-numeric: tabular-nums; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { color: var(--text-secondary); font-weight: 600; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+a { color: var(--pos); }
+</style>
+</head>
+<body>
+<main>
+  <h1>일일 시황 요약</h1>
+  <p class="meta">기준일 {{AS_OF}} · 생성 {{GENERATED}} · 재배포 등급 {{TIER}}</p>
+
+  <h2>지수 등락률 (전일 대비)</h2>
+  {{CHART}}
+
+  <h2>지수 표</h2>
+  <table>
+    <thead><tr><th>지수</th><th class="num">종가</th><th class="num">등락률</th><th>관측일 (현재 / 전일)</th></tr></thead>
+    <tbody>
+{{INDEX_ROWS}}
+    </tbody>
+  </table>
+
+  <h2>최근 공시</h2>
+  <table>
+    <thead><tr><th>일자</th><th>회사</th><th>공시명</th></tr></thead>
+    <tbody>
+{{DISCLOSURE_ROWS}}
+    </tbody>
+  </table>
+
+  <p class="note">출처: {{SOURCES}}. 자동 계산 결과이며 투자 판단의 근거가 아닙니다. 원자료는 각 출처 약관을 따릅니다.</p>
+</main>
+</body>
+</html>

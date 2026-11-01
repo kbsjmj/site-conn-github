@@ -1,0 +1,22 @@
+{
+  "lastBuildDate": "Sat, 31 Oct 2026 21:00:00 +0900",
+  "total": 2,
+  "start": 1,
+  "display": 2,
+  "items": [
+    {
+      "title": "[합성] <b>증시</b> 마감 &quot;요약&quot;",
+      "originallink": "https://example.com/kr/1",
+      "link": "https://n.news.example/1",
+      "description": "합성 설명 <b>증시</b>",
+      "pubDate": "Sat, 31 Oct 2026 20:30:00 +0900"
+    },
+    {
+      "title": "[합성] 환율 동향",
+      "originallink": "https://example.com/kr/2",
+      "link": "https://n.news.example/2",
+      "description": "합성",
+      "pubDate": "Sat, 31 Oct 2026 20:40:00 +0900"
+    }
+  ]
+}

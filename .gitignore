@@ -1,0 +1,20 @@
+# 비밀 값 (커밋 금지)
+.env
+.env.*
+env-*.md
+*.key
+*.pem
+
+# 수집 데이터와 산출물
+**/data/
+**/out/
+*.db
+*.db-wal
+*.db-shm
+.fuse_hidden*
+
+# 캐시와 OS 파일
+__pycache__/
+*.pyc
+.DS_Store
+Site-Conn-Github-*.md

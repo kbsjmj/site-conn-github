@@ -1,0 +1,20 @@
+# 데이터 종류 등록부. 종류마다 필수 필드와 저장 방식을 정한다.
+kinds:
+  index:
+    required: [symbol, date, value]
+    storage: records
+  disclosure:
+    required: [rcept_no, corp_code, report_nm, rcept_dt]
+    storage: records
+  news:
+    required: [url, title, published_at]
+    storage: records
+  quote:
+    required: [symbol, date, close]
+    storage: records
+  macro:
+    required: [series_id, date, value]
+    storage: records
+  alert:
+    required: [alert_id, symbol, time]
+    storage: records

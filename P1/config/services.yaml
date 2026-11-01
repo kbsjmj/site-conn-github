@@ -1,0 +1,6 @@
+# 외부 기능 등록부 (다른 프로젝트의 기능 호출). 현재 비어 있음.
+# 예: - name: report_builder
+#       kind: python | http
+#       endpoint: ...
+#       access: read | write   # write는 기본 차단, 호출 시 사용자 확인
+services: []

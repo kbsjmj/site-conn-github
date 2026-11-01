@@ -1,0 +1,24 @@
+[
+  {
+    "category": "general",
+    "datetime": 1793448000,
+    "headline": "[합성] 미국 증시 마감 요약",
+    "id": 900001,
+    "image": "",
+    "related": "",
+    "source": "Synthetic",
+    "summary": "합성 요약입니다.",
+    "url": "https://example.com/us/1"
+  },
+  {
+    "category": "general",
+    "datetime": 1793451599,
+    "headline": "[합성] 금리 전망 발표",
+    "id": 900002,
+    "image": "",
+    "related": "",
+    "source": "Synthetic",
+    "summary": "",
+    "url": "https://example.com/us/2"
+  }
+]
