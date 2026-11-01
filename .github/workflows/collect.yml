@@ -3,8 +3,9 @@ name: collect
 # GitHub이 이 위치의 워크플로만 읽는다. 실제 코드는 모두 P2/에 있다.
 on:
   schedule:
-    - cron: '30 22 * * *'   # UTC 기준. 매일 07:30 KST
-  workflow_dispatch:
+    - cron: '30 22 * * *'    # 매일 07:30 KST: 일간 소스 (FRED, DART, 시세)
+    - cron: '*/30 * * * *'   # 30분마다: 뉴스 소스
+  workflow_dispatch:         # 수동 실행은 전체 소스
 
 permissions:
   contents: read
@@ -31,8 +32,18 @@ jobs:
       - name: 테스트
         run: python -m unittest discover -s tests -t . -p 'test_*.py'
       - name: 수집
-        run: python -m collectors.run
         env:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
+          NAVER_API_KEY_ID: ${{ secrets.NAVER_API_KEY_ID }}
+          NAVER_API_KEY: ${{ secrets.NAVER_API_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+        run: |
+          case "${{ github.event.schedule }}" in
+            "*/30 * * * *") G=news ;;
+            "30 22 * * *")  G=daily ;;
+            *)              G=all ;;
+          esac
+          python -m collectors.run --group "$G"

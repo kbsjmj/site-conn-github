@@ -1,21 +1,29 @@
 """GitHub Actions 수집 진입점. 등록부(config/sources.json)의 활성 소스를 차례로 수집해 Supabase에 저장한다.
 
+- --group all: 전부 실행 (수동 실행). daily: 하루 한 번 소스. news: 30분마다 도는 뉴스 소스.
 - 소스 하나의 실패가 다른 소스를 멈추지 않는다 (실패 격리). 실패는 source_status에 남긴다.
 - 실패가 하나라도 있으면 종료 코드 1로 끝나서 Actions 실행이 실패로 보인다.
 - 키 값은 출력하지 않는다. 오류는 종류와 메시지만 남긴다.
 
-실행: cd P2 && python -m collectors.run
+실행: cd P2 && python -m collectors.run --group all
 """
+import argparse
 import json
 import os
 import sys
 from pathlib import Path
 
-from . import dart, fred
+from . import dart, fred, finnhub_news, naver_news, newsdata
 from .store import SupabaseStore
 
 CONFIG = Path(__file__).resolve().parent.parent / "config" / "sources.json"
-ADAPTERS = {"fred": fred, "dart": dart}
+ADAPTERS = {
+    "fred": fred,
+    "dart": dart,
+    "newsdata": newsdata,
+    "naver_news": naver_news,
+    "finnhub_news": finnhub_news,
+}
 
 
 def dedupe(items):
@@ -26,7 +34,7 @@ def dedupe(items):
     return list(seen.values())
 
 
-def main(store=None, config_path=CONFIG, env=None):
+def main(store=None, config_path=CONFIG, env=None, group="all"):
     env = os.environ if env is None else env
     sources = json.loads(Path(config_path).read_text(encoding="utf-8"))["sources"]
     store = store or SupabaseStore()
@@ -34,6 +42,8 @@ def main(store=None, config_path=CONFIG, env=None):
     failed = []
     for src in sources:
         sid = src["id"]
+        if group != "all" and src.get("schedule", "daily") != group:
+            continue
         if src.get("status") != "active":
             print(f"[건너뜀] {sid}: {src.get('status')}")
             continue
@@ -63,4 +73,6 @@ def main(store=None, config_path=CONFIG, env=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--group", default="all", choices=["all", "daily", "news"])
+    sys.exit(main(group=parser.parse_args().group))

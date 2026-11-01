@@ -3,6 +3,7 @@
     {
       "id": "fred",
       "status": "active",
+      "schedule": "daily",
       "keys": ["FRED_API_KEY"],
       "keep_raw": true,
       "series": ["SP500", "NASDAQCOM", "DJIA"],
@@ -12,10 +13,88 @@
     {
       "id": "dart",
       "status": "active",
+      "schedule": "daily",
       "keys": ["DART_API_KEY"],
       "keep_raw": true,
       "lookback_days": 3,
       "license": "DART 이용약관 확인 필요 (출처 표기 조건)"
+    },
+    {
+      "id": "newsdata",
+      "status": "active",
+      "schedule": "news",
+      "keys": ["NEWSDATA_API_KEY"],
+      "keep_raw": false,
+      "country": "us,kr",
+      "category": "business",
+      "license": "기사 원문 재배포 조건 확인 필요 (요약과 링크만 저장)"
+    },
+    {
+      "id": "naver_news",
+      "status": "active",
+      "schedule": "news",
+      "keys": ["NAVER_API_KEY_ID", "NAVER_API_KEY"],
+      "keep_raw": false,
+      "display": 20,
+      "queries": ["증시", "코스피", "금리", "환율", "경제"],
+      "license": "네이버 검색 API 약관 확인 필요"
+    },
+    {
+      "id": "finnhub_news",
+      "status": "active",
+      "schedule": "news",
+      "keys": ["FINNHUB_API_KEY"],
+      "keep_raw": false,
+      "category": "general",
+      "license": "Finnhub 약관 확인 필요 (뉴스 원문 재배포 조건)"
+    },
+    {
+      "id": "public_quote",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["DATA_GO_KR_KEY"],
+      "note": "어댑터 미구현. 공공누리 4유형: 상업적 이용·변경·재배포 금지",
+      "license": "공공누리 4유형"
+    },
+    {
+      "id": "ecos",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["ECOS_API_KEY"],
+      "note": "키 미발급, 어댑터 미구현",
+      "license": "한국은행 ECOS 이용 조건 확인 필요"
+    },
+    {
+      "id": "finnhub",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["FINNHUB_API_KEY"],
+      "note": "시세 어댑터 미구현. 종목 목록 필요",
+      "license": "Finnhub 약관 확인 필요"
+    },
+    {
+      "id": "tiingo",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["TIINGO_API_KEY"],
+      "note": "어댑터 미구현. 종목 목록 필요",
+      "license": "Tiingo 약관 확인 필요"
+    },
+    {
+      "id": "kiwoom",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["KIWOOM_APP_KEY", "KIWOOM_APP_SECRET"],
+      "note": "키움은 IP 등록 제약. GitHub 러너에서 호출하지 않고 Mac(P1)에서 실행한다",
+      "license": "키움 약관 확인 필요 (계좌 기반)"
+    },
+    {
+      "id": "tradingview",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["TRADINGVIEW_WEBHOOK_SECRET"],
+      "note": "웹훅 수신 서버가 필요하다. GitHub Actions는 외부 요청을 받을 수 없다",
+      "license": "TradingView 약관 확인 필요 (알림 수신용)"
     }
   ]
 }
