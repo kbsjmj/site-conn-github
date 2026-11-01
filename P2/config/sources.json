@@ -1,0 +1,21 @@
+{
+  "sources": [
+    {
+      "id": "fred",
+      "status": "active",
+      "keys": ["FRED_API_KEY"],
+      "keep_raw": true,
+      "series": ["SP500", "NASDAQCOM", "DJIA"],
+      "limit": 10,
+      "license": "FRED 약관 확인 필요 (재배포 조건)"
+    },
+    {
+      "id": "dart",
+      "status": "active",
+      "keys": ["DART_API_KEY"],
+      "keep_raw": true,
+      "lookback_days": 3,
+      "license": "DART 이용약관 확인 필요 (출처 표기 조건)"
+    }
+  ]
+}
