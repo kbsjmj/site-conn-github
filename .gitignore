@@ -18,3 +18,7 @@ __pycache__/
 *.pyc
 .DS_Store
 Site-Conn-Github-*.md
+
+# 현재시황뉴스 보고서 (재배포 등급 1, 개인 전용): 저장소에 올리지 않는다
+현재시황뉴스*.pdf
+P1/report/inputs/

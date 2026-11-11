@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>{{TITLE}}</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+  :root { --ink:#1d2129; --sub:#5b6370; --line:#d9dde3; --note:#f4f6f8; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:#fff; color:var(--ink); }
+  body { font-family: "Noto Sans CJK KR", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; font-size: 10pt; line-height: 1.4; }
+  header { border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 14px; }
+  h1 { font-size: 18pt; margin: 0 0 4px 0; }
+  .meta { color: var(--sub); font-size: 9pt; }
+  h2 { font-size: 13pt; margin: 18px 0 8px 0; border-left: 4px solid var(--ink); padding-left: 8px; }
+  h3 { font-size: 11pt; margin: 14px 0 6px 0; }
+  p { margin: 0 0 5px 0; text-align: justify; word-break: keep-all; }
+  .lead { font-weight: 600; }
+  .scope { background: var(--note); padding: 8px 10px; font-size: 9pt; color: var(--sub); margin: 0 0 12px 0; }
+  .note { background: var(--note); border-left: 3px solid #9aa3ae; padding: 6px 10px; font-size: 9pt; color: var(--sub); margin: 6px 0 10px 0; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 6px 0 4px 0; font-size: 9.5pt; }
+  table col.c-name { width: 40%; }
+  table col.c-num { width: 20%; }
+  .up { color: #d32f2f; font-weight: 600; }
+  .dn { color: #1565c0; font-weight: 600; }
+  th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: right; }
+  th { font-weight: 600; background: var(--note); }
+  th:first-child, td:first-child { text-align: left; }
+  .src { font-size: 8.5pt; color: var(--sub); margin-top: 2px; }
+  ol.src-list { font-size: 8pt; color: var(--sub); padding-left: 18px; margin: 4px 0; }
+  .tag { display:inline-block; padding:1px 8px; border-radius:3px; font-size:9pt; font-weight:700; color:#ffffff; margin-right:2px; }
+  .tag.up { background:#d32f2f; }
+  .tag.down { background:#1565c0; }
+  footer { margin-top: 18px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 8.5pt; color: var(--sub); }
+</style>
+</head>
+<body>
+<header>
+  <h1>{{TITLE}}</h1>
+  <div class="meta">{{META}}</div>
+</header>
+{{BODY}}
+</body>
+</html>

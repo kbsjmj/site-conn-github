@@ -183,6 +183,46 @@
       "keys": ["TRADINGVIEW_WEBHOOK_SECRET"],
       "note": "웹훅 수신 서버가 필요하다. GitHub Actions는 외부 요청을 받을 수 없다",
       "license": "TradingView 약관 확인 필요 (알림 수신용)"
+    },
+    {
+      "id": "kis",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["KIS_APP_KEY", "KIS_APP_SECRET"],
+      "note": "2026-11-10 Local 등록부에서 추가. 어댑터 미구현. 실시간은 계좌·키 필요. Mac 실행 후보",
+      "license": "한국투자증권 Open API 약관 확인 필요 (계좌 기반)"
+    },
+    {
+      "id": "krx_open",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["KRX_API_KEY"],
+      "note": "2026-11-10 Local 등록부에서 추가. 공식 API 이용 조건 확인 필요. 어댑터 미구현",
+      "license": "KRX 정보데이터시스템 OpenAPI 이용 조건 확인 필요"
+    },
+    {
+      "id": "krx_data",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": [],
+      "note": "2026-11-10 Local 등록부에서 추가. 공식 API 미확인 (웹 포털). 검토 전 수집 금지",
+      "license": "공식 API 확인 전. 웹 포털 수집은 약관과 robots 확인 후에만 허용"
+    },
+    {
+      "id": "fsc_index",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["DATA_GO_KR_KEY"],
+      "note": "2026-11-10 Local 등록부에서 추가. 어댑터 미구현. 활용신청 승인 확인 필요",
+      "license": "공공데이터포털 금융위원회 지수시세정보 이용 조건 확인 필요"
+    },
+    {
+      "id": "fsc_stock",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["DATA_GO_KR_KEY"],
+      "note": "2026-11-10 Local 등록부에서 추가. 어댑터 미구현. 활용신청 승인 확인 필요",
+      "license": "공공데이터포털 금융위원회 주식시세정보 (이용허락 제한 없음, 페이지 표기)"
     }
   ]
 }

@@ -13,7 +13,7 @@ sources:
     realtime: daily
     status: active
     license: "FRED 약관 확인 필요 (생성 자료 재배포 조건)"
-    series: [SP500, NASDAQCOM, DJIA]
+    series: [SP500, NASDAQCOM, DJIA, VIXCLS, DGS10, DCOILWTICO]   # 2026-11-10 추가: VIX, 미국 10년물, WTI (공식 FRED, 1~2영업일 지연). Local 등록부와 동일
     limit: 10
   - id: dart
     adapter: dart
@@ -128,3 +128,141 @@ sources:
     realtime: realtime
     status: paused             # 어댑터·수신 서버 미구현, 유료 플랜 확인 필요
     license: "TradingView 약관 확인 필요 (알림 수신용, 시세 재배포 아님)"
+
+  # --- 2026-11-10 추가: Local 등록부(sources.yaml)에서 복사한 미등록 13곳. 모두 paused. 키 이름은 예정값.
+  - id: alpha_vantage
+    adapter: alpha_vantage
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: [ALPHA_VANTAGE_API_KEY]
+    realtime: delayed
+    status: paused             # 어댑터 미구현 (접속 점검: 접속 가능)
+    license: "Alpha Vantage 이용약관 확인 필요"
+  - id: polygon
+    adapter: polygon
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: [POLYGON_API_KEY]
+    realtime: delayed
+    status: paused             # 어댑터 미구현 (접속 점검: 키 필요, 401)
+    license: "Polygon.io 이용약관 확인 필요"
+  - id: fmp
+    adapter: fmp
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: [FMP_API_KEY]
+    realtime: delayed
+    status: paused             # 어댑터 미구현 (접속 점검: 키 필요, 401)
+    license: "FMP 이용약관 확인 필요"
+  - id: yahoo_finance
+    adapter: yahoo_finance
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: []
+    realtime: delayed
+    status: paused             # 비공식 엔드포인트. 약관 검토 전 사용 금지
+    license: "공식 API 아님 (비공식 엔드포인트). 이용 조건 검토 전 수집 금지"
+  - id: krx_open
+    adapter: krx_open
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: [KRX_API_KEY]
+    realtime: daily
+    status: paused             # 어댑터 미구현 (접속 점검: 접속 가능)
+    license: "KRX 정보데이터시스템 OpenAPI 이용 조건 확인 필요"
+  - id: krx_data
+    adapter: krx_data
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: []
+    realtime: daily
+    status: paused             # 공식 API 여부 미확인 (웹 포털). 수집 방식 검토 전 사용 금지
+    license: "공식 API 확인 전. 웹 포털 수집은 약관과 robots 확인 후에만 허용"
+  - id: kis
+    adapter: kis
+    kind: quote
+    mode: poll
+    interval_min: 1
+    daily_limit: null
+    keys: [KIS_APP_KEY, KIS_APP_SECRET]
+    realtime: realtime
+    status: paused             # 어댑터 미구현 (접속 점검: 접속 가능, 키 미보유)
+    license: "한국투자증권 Open API 약관 확인 필요 (계좌 기반)"
+  - id: mirae_asset
+    adapter: mirae_asset
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null
+    keys: [MIRAE_ASSET_APP_KEY, MIRAE_ASSET_APP_SECRET]
+    realtime: daily
+    status: paused             # 공식 신청 경로 미확인 (접속 점검 당시 DNS 실패)
+    license: "공식 신청 경로 미확인. 확인 전 사용 금지"
+  - id: currents
+    adapter: currents
+    kind: news
+    mode: poll
+    interval_min: 10
+    daily_limit: null
+    keys: [CURRENTS_API_KEY]
+    realtime: near
+    status: paused             # 어댑터 미구현 (접속 점검: 키 필요, 401)
+    license: "Currents API 약관 확인 필요 (기사 원문 재배포 조건)"
+    poll_sec: 1800
+    keep_raw: false
+  - id: newsapi
+    adapter: newsapi
+    kind: news
+    mode: poll
+    interval_min: 10
+    daily_limit: null
+    keys: [NEWSAPI_API_KEY]
+    realtime: near
+    status: paused             # 어댑터 미구현 (접속 점검: 키 필요, 401)
+    license: "NewsAPI.org 약관 확인 필요"
+    poll_sec: 1800
+    keep_raw: false
+  - id: guardian
+    adapter: guardian
+    kind: news
+    mode: poll
+    interval_min: 10
+    daily_limit: null
+    keys: [GUARDIAN_API_KEY]
+    realtime: near
+    status: paused             # 어댑터 미구현 (접속 점검: 키 필요, 401)
+    license: "The Guardian Open Platform 약관 확인 필요"
+    poll_sec: 1800
+    keep_raw: false
+  - id: fsc_index
+    adapter: fsc_index
+    kind: index
+    mode: poll
+    interval_min: 1440
+    daily_limit: null          # 개발계정 일 한도 활용신청 페이지에서 확인 후 기입
+    keys: [DATA_GO_KR_KEY]
+    realtime: daily
+    status: paused             # 어댑터 미구현, 활용신청 승인 확인 필요
+    license: "공공데이터포털 금융위원회 지수시세정보 이용 조건 확인 필요"
+  - id: fsc_stock
+    adapter: fsc_stock
+    kind: quote
+    mode: poll
+    interval_min: 1440
+    daily_limit: null          # 개발계정 트래픽 10,000 (페이지 표기)
+    keys: [DATA_GO_KR_KEY]
+    realtime: daily
+    status: paused             # 어댑터 미구현, 활용신청 승인 확인 필요
+    license: "공공데이터포털 금융위원회 주식시세정보 (이용허락 제한 없음, 페이지 표기)"

@@ -7,6 +7,7 @@
   python3 main.py run [--source ID]  활성 소스 수집 및 저장 (네트워크 호출)
   python3 main.py summary          지수 등락률 요약 출력
   python3 main.py report           일일 시황 HTML 생성 (out/<기준일>/)
+  python3 main.py current-news --input FILE [--no-pdf]  입력 JSON 하나로 현재시황뉴스 PDF 생성 (Local과 같은 형식, 프로젝트 폴더 루트에 저장)
   python3 main.py feed [--port 8765]  뉴스 피드: 활성 뉴스 소스를 주기적으로 조회하고 127.0.0.1 페이지로 보여줌
 """
 import argparse
@@ -22,7 +23,7 @@ from core import registry  # noqa: E402
 from core.config import env_file_exists, env_file_path, load_env  # noqa: E402
 from core.logger import get_logger, mask  # noqa: E402
 from core.storage import Store  # noqa: E402
-from report import build, summary  # noqa: E402
+from report import build, current_news, summary  # noqa: E402
 
 DB = Path(os.environ["KBS_DB"]) if os.environ.get("KBS_DB") else ROOT / "data" / "data.db"
 OUT = ROOT / "out"
@@ -118,6 +119,28 @@ def cmd_report(_args):
     return 0
 
 
+def _print_result(res):
+    print(f"  {res['stem']}")
+    if res.get("pdf"):
+        print(f"  PDF: {res['pdf']}")
+    if res.get("html"):
+        print(f"  HTML: {res['html']}")
+    for problem in res.get("layout") or []:
+        print(f"  쪽 배치 확인: {problem}")
+
+
+def cmd_current_news(args):
+    """지정한 입력 파일 하나로 현재시황뉴스 보고서를 만든다 (Local과 같은 생성기)."""
+    try:
+        res = current_news.build(args.input, pdf=not args.no_pdf)
+    except (ValueError, FileExistsError, RuntimeError, FileNotFoundError, OSError) as e:
+        print(f"보고서 실패: {e}")
+        return 1
+    print("만든 파일 (프로젝트 폴더 루트):")
+    _print_result(res)
+    return 0
+
+
 def cmd_feed(args):
     from server.feed import run_feed
 
@@ -143,13 +166,17 @@ def main(argv=None):
     r.add_argument("--source", default=None)
     sub.add_parser("summary")
     sub.add_parser("report")
+    cn = sub.add_parser("current-news")
+    cn.add_argument("--input", required=True, help="입력 JSON 파일 경로")
+    cn.add_argument("--no-pdf", action="store_true", help="HTML만 만들고 PDF는 만들지 않음")
     fd = sub.add_parser("feed")
     fd.add_argument("--port", type=int, default=8765)
     args = p.parse_args(argv)
     if args.cmd is None:
         return cmd_all(args)
     return {"sources": cmd_sources, "check": cmd_check, "run": cmd_run,
-            "summary": cmd_summary, "report": cmd_report, "feed": cmd_feed}[args.cmd](args)
+            "summary": cmd_summary, "report": cmd_report, "current-news": cmd_current_news,
+            "feed": cmd_feed}[args.cmd](args)
 
 
 if __name__ == "__main__":
