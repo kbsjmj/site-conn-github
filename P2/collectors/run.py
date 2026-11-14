@@ -13,7 +13,7 @@ import os
 import sys
 from pathlib import Path
 
-from . import dart, fred, finnhub_news, naver_news, newsdata
+from . import dart, fmp, fred, finnhub_news, naver_news, newsdata, tiingo, validate
 from .store import SupabaseStore
 
 CONFIG = Path(__file__).resolve().parent.parent / "config" / "sources.json"
@@ -23,6 +23,8 @@ ADAPTERS = {
     "newsdata": newsdata,
     "naver_news": naver_news,
     "finnhub_news": finnhub_news,
+    "fmp": fmp,
+    "tiingo": tiingo,
 }
 
 
@@ -40,6 +42,7 @@ def main(store=None, config_path=CONFIG, env=None, group="all"):
     store = store or SupabaseStore()
 
     failed = []
+    prices = {}  # 이번 실행에서 성공한 시세 소스별 {(종목, 날짜): 종가}
     for src in sources:
         sid = src["id"]
         if group != "all" and src.get("schedule", "daily") != group:
@@ -60,6 +63,9 @@ def main(store=None, config_path=CONFIG, env=None, group="all"):
             n = store.upsert_records(mod.KIND, sid, items, raw_id)
             store.set_ok(sid)
             print(f"[성공] {sid}: {n}건 저장")
+            if mod.KIND == "price":
+                prices[sid] = {(it["payload"]["symbol"], it["payload"]["date"]): it["payload"]["close"]
+                               for it in items}
         except Exception as e:  # 소스별 격리: 어떤 실패도 다음 소스를 멈추지 않는다
             failed.append(sid)
             msg = f"{type(e).__name__}: {e}"
@@ -68,6 +74,19 @@ def main(store=None, config_path=CONFIG, env=None, group="all"):
             except Exception:
                 print(f"[경고] {sid}: 상태 기록도 실패")
             print(f"[실패] {sid}: {msg}")
+
+    # 교차검증: 시세 소스 2개 이상이 이번 실행에서 성공했을 때만 비교한다.
+    if len(prices) >= 2:
+        try:
+            checks = validate.compare(prices)
+            n = store.upsert_records("check", "cross_check", checks, None)
+            counts = {s: sum(1 for c in checks if c["payload"]["status"] == s)
+                      for s in ("일치", "불일치", "단일소스")}
+            print(f"[검증] {', '.join(sorted(prices))}: {n}건 기록 "
+                  f"(일치 {counts['일치']} / 불일치 {counts['불일치']} / 단일소스 {counts['단일소스']})")
+        except Exception as e:
+            failed.append("cross_check")
+            print(f"[실패] cross_check: {type(e).__name__}: {e}")
 
     return 1 if failed else 0
 

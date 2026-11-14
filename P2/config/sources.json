@@ -58,11 +58,14 @@
     },
     {
       "id": "tiingo",
-      "status": "paused",
+      "status": "active",
       "schedule": "daily",
       "keys": ["TIINGO_API_KEY"],
-      "note": "어댑터 미구현. 종목 목록 필요. 야간 실시간은 유료",
-      "license": "Tiingo 약관 확인 필요"
+      "keep_raw": false,
+      "symbols": ["SPY", "QQQ", "DIA"],
+      "lookback_days": 10,
+      "note": "무료 플랜 (시간당 50, 하루 1,000, 월 1GB). 종목당 1회 호출. 야간 실시간은 유료라 사용하지 않음. 개인 내부용",
+      "license": "Tiingo 약관 확인 필요 (무료 플랜은 개인 내부용)"
     },
     {
       "id": "public_quote",
@@ -146,11 +149,22 @@
     },
     {
       "id": "fmp",
-      "status": "paused",
+      "status": "active",
       "schedule": "daily",
       "keys": ["FMP_API_KEY"],
-      "note": "키 없음 (제안 이름). 어댑터 미구현",
-      "license": "FMP 약관 확인 필요"
+      "keep_raw": false,
+      "symbols": ["SPY", "QQQ", "DIA"],
+      "limit": 10,
+      "note": "무료 플랜 (하루 250회). 종목당 1회 호출. 무료에서 되는 일봉(historical-price-eod)만 사용. 유료 엔드포인트 추가 금지",
+      "license": "FMP 약관 확인 필요 (무료 플랜 상업적 이용 조건)"
+    },
+    {
+      "id": "eodhd",
+      "status": "paused",
+      "schedule": "daily",
+      "keys": ["EODHD_API_KEY"],
+      "note": "2026-11-15 계정 조회 확인: 무료 플랜, 일 20회, extraLimit 496 (초과 시 과금 가능성). 데이터 호출 금지. 유료 발생 위험 해소 전까지 paused 유지",
+      "license": "EODHD 약관 확인 필요 (무료 플랜 상업적 이용 제한)"
     },
     {
       "id": "currents",
