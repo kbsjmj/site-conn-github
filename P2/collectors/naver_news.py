@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 
 from .net import get_json
 
-URL = "https://openapi.naver.com/v1/search/news.json"
+URL = "https://naverapihub.apigw.ntruss.com/search/v1/news"
 KIND = "news"
 KST = timezone(timedelta(hours=9))
 TAG = re.compile(r"<[^>]+>")
@@ -21,8 +21,8 @@ def _clean(text):
 
 def fetch(cfg, env):
     headers = {
-        "X-Naver-Client-Id": env["NAVER_API_KEY_ID"],
-        "X-Naver-Client-Secret": env["NAVER_API_KEY"],
+        "X-NCP-APIGW-API-KEY-ID": env["NAVER_API_KEY_ID"],
+        "X-NCP-APIGW-API-KEY": env["NAVER_API_KEY"],
     }
     out = {}
     for query in cfg.get("queries") or ["증시"]:
