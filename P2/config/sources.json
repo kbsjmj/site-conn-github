@@ -153,7 +153,7 @@
       "schedule": "daily",
       "keys": ["FMP_API_KEY"],
       "keep_raw": false,
-      "symbols": ["SPY", "QQQ", "DIA"],
+      "symbols": ["SPY"],
       "limit": 10,
       "note": "무료 플랜 (하루 250회). 종목당 1회 호출. 무료에서 되는 일봉(historical-price-eod)만 사용. 유료 엔드포인트 추가 금지",
       "license": "FMP 약관 확인 필요 (무료 플랜 상업적 이용 조건)"
